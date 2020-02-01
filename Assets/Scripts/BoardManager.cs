@@ -81,6 +81,7 @@ public class BoardManager : MonoBehaviour
                 if(c.GetType() == typeof(King))
                 {
                     //Game Over
+                    EndGame();
                     return;
                 }
 
@@ -208,5 +209,20 @@ public class BoardManager : MonoBehaviour
                 Vector3.forward * selectionY + Vector3.right * (selectionX + 1),
                 Vector3.forward * (selectionY + 1) + Vector3.right * selectionX);
         }
+    }
+    //게임 종료
+    private void EndGame()
+    {
+        if (isWhiteTurn)
+            Debug.Log("White team wins");
+        else
+            Debug.Log("White team wins");
+
+        foreach (GameObject go in activeChessman)
+            Destroy(go);
+
+        isWhiteTurn = true;
+        BoardHighlights.Instance.HideHighlights();
+        SpawnAllChessmans();
     }
 }
