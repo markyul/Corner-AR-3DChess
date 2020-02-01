@@ -8,7 +8,6 @@ public class King : Chessman
     {
         bool[,] r = new bool[8, 8];
         Chessman c;
-
         if (isWhite)    //White team
         {
             // 좌측 위
