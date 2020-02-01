@@ -9,7 +9,8 @@ public class Pawn : Chessman
         bool[,] r = new bool[8, 8];
         Chessman c, c2;
 
-        if (isWhite)    //White team
+        //White team
+        if (isWhite)
         {
             //대각선 왼쪽
             if (CurrentX != 0 && CurrentY != 7)
@@ -19,6 +20,7 @@ public class Pawn : Chessman
                 if (c != null && !c.isWhite)
                     r[CurrentX - 1, CurrentY + 1] = true;
             }
+
             //대각선 오른쪽
             if (CurrentX != 7 && CurrentY != 7)
             {
@@ -27,6 +29,7 @@ public class Pawn : Chessman
                 if (c != null && !c.isWhite)
                     r[CurrentX + 1, CurrentY + 1] = true;
             }
+
             //앞으로 한칸
             if (CurrentY != 7)
             {
@@ -35,6 +38,7 @@ public class Pawn : Chessman
                 if (c == null)
                     r[CurrentX, CurrentY + 1] = true;
             }
+
             //앞으로 두칸
             if (CurrentY == 1)
             {
@@ -45,7 +49,8 @@ public class Pawn : Chessman
             }
 
         }
-        else    //Black team
+        //Black team
+        else
         {
             //대각선 왼쪽
             if (CurrentX != 0 && CurrentY != 0)
@@ -55,6 +60,7 @@ public class Pawn : Chessman
                 if (c != null && c.isWhite)
                     r[CurrentX - 1, CurrentY - 1] = true;
             }
+
             //대각선 오른쪽
             if (CurrentX != 7 && CurrentY != 0)
             {
@@ -63,6 +69,7 @@ public class Pawn : Chessman
                 if (c != null && c.isWhite)
                     r[CurrentX + 1, CurrentY - 1] = true;
             }
+
             //앞으로 한칸
             if (CurrentY != 0)
             {
@@ -71,6 +78,7 @@ public class Pawn : Chessman
                 if (c == null)
                     r[CurrentX, CurrentY - 1] = true;
             }
+
             //앞으로 두칸
             if (CurrentY == 6)
             {
