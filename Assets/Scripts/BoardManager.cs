@@ -63,6 +63,19 @@ public class BoardManager : MonoBehaviour
             return;
         }
 
+        bool hasAtLeastOneMove = false;
+        allowedMoves = Chessmans[x, y].PossibleMove();
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (allowedMoves[i, j])
+                    hasAtLeastOneMove = true;
+            }
+        }
+        if (!hasAtLeastOneMove)
+            return;
+
         allowedMoves = Chessmans[x, y].PossibleMove();
         selectedChessman = Chessmans[x, y];
         BoardHighlights.Instance.HighlightAllowedMoves(allowedMoves);
