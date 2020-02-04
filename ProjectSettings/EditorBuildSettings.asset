@@ -4,5 +4,13 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
-  m_configObjects: {}
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Lobby.unity
+    guid: 0de4e5a3cc78c9749b01aa82da823494
+  - enabled: 1
+    path: Assets/Scenes/ChessGame.unity
+    guid: 692d412d0fa99a34792fb0fed91f355b
+  m_configObjects:
+    com.unity.xr.arcore.PlayerSettings: {fileID: 11400000, guid: 325fb178c983a21429dbfa3b147e6d18,
+      type: 2}

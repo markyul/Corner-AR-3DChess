@@ -1,15 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
+using Photon.Chat;
 
-public class BoardManager : MonoBehaviour
+public class BoardManager : MonoBehaviourPun
 {
     public static BoardManager Instance { set; get; }
+    public Camera HostCamera;
+    public Camera ClientCamera;
+
     private bool[,] allowedMoves { set; get; }
 
     public Chessman[,] Chessmans { set; get; }
     private Chessman selectedChessman;
-
+    
     private const float TILE_SIZE = 1.0f;
     private const float TILE_OFFSET = 0.5f;
 
@@ -26,7 +32,24 @@ public class BoardManager : MonoBehaviour
     {
         Instance = this;
         SpawnAllChessmans();
+  
+        if (PhotonNetwork.IsMasterClient)
+        {
+            HostCamera.enabled = true;
+            ClientCamera.enabled = false;
+            Debug.Log("위에꺼");
+            
+        }
+        else
+        {
+            HostCamera.enabled = false;
+            ClientCamera.enabled = true;
+            Debug.Log("밑에꺼");
+
+        }
+
     }
+
     private void Update()
     {
         UpdateSelection();
@@ -118,7 +141,8 @@ public class BoardManager : MonoBehaviour
     {
         if (!Camera.main)
             return;
-
+        if (PhotonNetwork.IsMasterClient && !isWhiteTurn) return;
+        if (!PhotonNetwork.IsMasterClient && isWhiteTurn) return;
         RaycastHit hit;
         if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 25.0f, LayerMask.GetMask("ChessPlane")))
         {
