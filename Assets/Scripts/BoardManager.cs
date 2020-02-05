@@ -65,13 +65,13 @@ public class BoardManager : MonoBehaviourPun
                 {
                     //체스말 선택
                     SelectChessman(selectionX, selectionY);
-                    pv.RPC("SelectChessman", RpcTarget.AllBuffered, selectionX, selectionY);
+                    pv.RPC("SelectChessman", RpcTarget.AllViaServer, selectionX, selectionY);
                 }
                 else
                 {
                     //체스말 이동
                     MoveChessman(selectionX, selectionY);
-                    pv.RPC("MoveChessman", RpcTarget.AllBuffered, selectionX, selectionY);
+                    pv.RPC("MoveChessman", RpcTarget.AllViaServer, selectionX, selectionY);
                 }
             }
         }
