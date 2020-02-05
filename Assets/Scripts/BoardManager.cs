@@ -10,13 +10,13 @@ public class BoardManager : MonoBehaviourPun
     public static BoardManager Instance { set; get; }
     public Camera HostCamera;
     public Camera ClientCamera;
-    PhotonView pv;
+    private PhotonView pv;
 
     private bool[,] allowedMoves { set; get; }
 
     public Chessman[,] Chessmans { set; get; }
     private Chessman selectedChessman;
-    
+
     private const float TILE_SIZE = 1.0f;
     private const float TILE_OFFSET = 0.5f;
 
@@ -33,14 +33,13 @@ public class BoardManager : MonoBehaviourPun
     {
         Instance = this;
         SpawnAllChessmans();
-        pv = GetComponent<PhotonView>();
-  
+
         if (PhotonNetwork.IsMasterClient)
         {
             HostCamera.enabled = true;
             ClientCamera.enabled = false;
             Debug.Log("위에꺼");
-            
+
         }
         else
         {
@@ -56,21 +55,22 @@ public class BoardManager : MonoBehaviourPun
     {
         UpdateSelection();
         DrawChessboard();
+        pv = GetComponent<PhotonView>();
 
         if (Input.GetMouseButtonDown(0))
         {
-            if(selectionX >= 0 && selectionY >= 0)
+            if (selectionX >= 0 && selectionY >= 0)
             {
-                if(selectedChessman == null)
+                if (selectedChessman == null)
                 {
                     //체스말 선택
-                    SelectChessman(selectionX, selectionY);
+                    //SelectChessman(selectionX, selectionY);
                     pv.RPC("SelectChessman", RpcTarget.AllViaServer, selectionX, selectionY);
                 }
                 else
                 {
                     //체스말 이동
-                    MoveChessman(selectionX, selectionY);
+                    //MoveChessman(selectionX, selectionY);
                     pv.RPC("MoveChessman", RpcTarget.AllViaServer, selectionX, selectionY);
                 }
             }
@@ -81,12 +81,12 @@ public class BoardManager : MonoBehaviourPun
     [PunRPC]
     private void SelectChessman(int x, int y)
     {
-        if(Chessmans[x, y] == null)
+        if (Chessmans[x, y] == null)
         {
             return;
         }
 
-        if(Chessmans[x, y].isWhite != isWhiteTurn)
+        if (Chessmans[x, y].isWhite != isWhiteTurn)
         {
             return;
         }
@@ -109,18 +109,19 @@ public class BoardManager : MonoBehaviourPun
         BoardHighlights.Instance.HighlightAllowedMoves(allowedMoves);
     }
 
-    [PunRPC]
+
     //체스말 이동
+    [PunRPC]
     private void MoveChessman(int x, int y)
     {
         if (allowedMoves[x, y])
         {
             Chessman c = Chessmans[x, y];
             //상대말 잡기
-            if(c != null && c.isWhite != isWhiteTurn)
+            if (c != null && c.isWhite != isWhiteTurn)
             {
                 //킹을 잡을 경우
-                if(c.GetType() == typeof(King))
+                if (c.GetType() == typeof(King))
                 {
                     //Game Over
                     EndGame();
@@ -149,7 +150,7 @@ public class BoardManager : MonoBehaviourPun
         if (PhotonNetwork.IsMasterClient && !isWhiteTurn) return;
         if (!PhotonNetwork.IsMasterClient && isWhiteTurn) return;
         RaycastHit hit;
-        if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 25.0f, LayerMask.GetMask("ChessPlane")))
+        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 25.0f, LayerMask.GetMask("ChessPlane")))
         {
             selectionX = (int)hit.point.x;
             selectionY = (int)hit.point.z;
@@ -230,7 +231,7 @@ public class BoardManager : MonoBehaviourPun
         Vector3 widthLine = Vector3.right * 8;
         Vector3 heigthLine = Vector3.forward * 8;
 
-        for(int i = 0; i <= 8; i++)
+        for (int i = 0; i <= 8; i++)
         {
             Vector3 start = Vector3.forward * i;
             Debug.DrawLine(start, start + widthLine);
@@ -242,7 +243,7 @@ public class BoardManager : MonoBehaviourPun
         }
 
         // 마우스 위치에 따른 표시
-        if(selectionX >= 0 && selectionY >= 0)
+        if (selectionX >= 0 && selectionY >= 0)
         {
             Debug.DrawLine(
                 Vector3.forward * selectionY + Vector3.right * selectionX,
