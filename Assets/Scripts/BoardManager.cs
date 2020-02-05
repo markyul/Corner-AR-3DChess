@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Photon.Chat;
 
-public class BoardManager : MonoBehaviourPun
+public class BoardManager : MonoBehaviourPun, IPunObservable
 {
     public static BoardManager Instance { set; get; }
     public Camera HostCamera;
@@ -28,6 +28,7 @@ public class BoardManager : MonoBehaviourPun
     private Quaternion orientation = Quaternion.Euler(0, 180, 0);
 
     public bool isWhiteTurn = true;
+
     private void Start()
     {
         Instance = this;
@@ -62,18 +63,21 @@ public class BoardManager : MonoBehaviourPun
                 if(selectedChessman == null)
                 {
                     //체스말 선택
-                    SelectChessman(selectionX, selectionY);
+                    //SelectChessman(selectionX, selectionY);
+                    photonView.RPC("SelectChessman", RpcTarget.All, selectionX, selectionY);
                 }
                 else
                 {
                     //체스말 이동
-                    MoveChessman(selectionX, selectionY);
+                    //MoveChessman(selectionX, selectionY);
+                    photonView.RPC("MoveChessman", RpcTarget.All, selectionX, selectionY);
                 }
             }
         }
     }
 
     //체스말 선택
+    [PunRPC]
     private void SelectChessman(int x, int y)
     {
         if(Chessmans[x, y] == null)
@@ -105,6 +109,7 @@ public class BoardManager : MonoBehaviourPun
     }
 
     //체스말 이동
+    [PunRPC]
     private void MoveChessman(int x, int y)
     {
         if (allowedMoves[x, y])
@@ -261,5 +266,18 @@ public class BoardManager : MonoBehaviourPun
         isWhiteTurn = true;
         BoardHighlights.Instance.HideHighlights();
         SpawnAllChessmans();
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        throw new System.NotImplementedException();
+        if (stream.IsWriting)
+        {
+            stream.SendNext(info);
+        }
+        else
+        {
+            Debug.Log(stream.ReceiveNext());
+        }
     }
 }
