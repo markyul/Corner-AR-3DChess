@@ -65,13 +65,13 @@ public class BoardManager : MonoBehaviourPun
                 {
                     //체스말 선택
                     //SelectChessman(selectionX, selectionY);
-                    pv.RPC("SelectChessman", RpcTarget.AllViaServer, selectionX, selectionY);
+                    pv.RPC("SelectChessman", RpcTarget.AllBuffered, selectionX, selectionY);
                 }
                 else
                 {
                     //체스말 이동
                     //MoveChessman(selectionX, selectionY);
-                    pv.RPC("MoveChessman", RpcTarget.AllViaServer, selectionX, selectionY);
+                    pv.RPC("MoveChessman", RpcTarget.AllBuffered, selectionX, selectionY);
                 }
             }
         }
@@ -147,8 +147,18 @@ public class BoardManager : MonoBehaviourPun
     {
         if (!Camera.main)
             return;
-        if (PhotonNetwork.IsMasterClient && !isWhiteTurn) return;
-        if (!PhotonNetwork.IsMasterClient && isWhiteTurn) return;
+        if (PhotonNetwork.IsMasterClient && !isWhiteTurn)
+        {
+            selectionX = -1;
+            selectionY = -1;
+            return;
+        }
+        if (!PhotonNetwork.IsMasterClient && isWhiteTurn)
+        {
+            selectionX = -1;
+            selectionY = -1;
+            return;
+        }
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 25.0f, LayerMask.GetMask("ChessPlane")))
         {
