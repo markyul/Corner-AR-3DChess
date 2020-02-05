@@ -10,6 +10,7 @@ public class BoardManager : MonoBehaviourPun
     public static BoardManager Instance { set; get; }
     public Camera HostCamera;
     public Camera ClientCamera;
+    PhotonView pv;
 
     private bool[,] allowedMoves { set; get; }
 
@@ -32,6 +33,7 @@ public class BoardManager : MonoBehaviourPun
     {
         Instance = this;
         SpawnAllChessmans();
+        pv = GetComponent<PhotonView>();
   
         if (PhotonNetwork.IsMasterClient)
         {
@@ -63,17 +65,20 @@ public class BoardManager : MonoBehaviourPun
                 {
                     //체스말 선택
                     SelectChessman(selectionX, selectionY);
+                    pv.RPC("SelectChessman", RpcTarget.AllBuffered, selectionX, selectionY);
                 }
                 else
                 {
                     //체스말 이동
                     MoveChessman(selectionX, selectionY);
+                    pv.RPC("MoveChessman", RpcTarget.AllBuffered, selectionX, selectionY);
                 }
             }
         }
     }
 
     //체스말 선택
+    [PunRPC]
     private void SelectChessman(int x, int y)
     {
         if(Chessmans[x, y] == null)
@@ -104,6 +109,7 @@ public class BoardManager : MonoBehaviourPun
         BoardHighlights.Instance.HighlightAllowedMoves(allowedMoves);
     }
 
+    [PunRPC]
     //체스말 이동
     private void MoveChessman(int x, int y)
     {
