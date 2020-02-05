@@ -131,7 +131,6 @@ public class BoardManager : MonoBehaviourPun
             Chessmans[x, y] = selectedChessman;
             isWhiteTurn = !isWhiteTurn;   //턴 변경
         }
-
         BoardHighlights.Instance.HideHighlights();
         selectedChessman = null;
     }
@@ -169,6 +168,7 @@ public class BoardManager : MonoBehaviourPun
             go = Instantiate(chessmanPrefabs[index], GetTileCenter(x, y), orientation) as GameObject;
         }
         go.transform.SetParent(transform);
+        go.AddComponent<PhotonView>();
         Chessmans[x, y] = go.GetComponent<Chessman>();
         Chessmans[x, y].SetPosition(x, y);
         activeChessman.Add(go);
