@@ -22,12 +22,12 @@ public class BoardManager : MonoBehaviour
     private Quaternion orientation = Quaternion.Euler(0, 180, 0);
 
     public bool isWhiteTurn = true;
-    private void Start()
+    void Start()
     {
         Instance = this;
         SpawnAllChessmans();
     }
-    private void Update()
+    void Update()
     {
         UpdateSelection();
         DrawChessboard();
